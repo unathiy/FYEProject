@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Student to Mentorship Group</title>
+</head>
+<body>
+    <div class="container">
+        <h1>Add Student to Mentorship Group</h1>
+        <form id="addStudentForm" action="/add-student-to-group" method="POST">
+            <div class="form-group">
+                <label for="studentUsernumber">Student User Number:</label>
+                <input type="text" id="studentUsernumber" name="studentUsernumber" required>
+            </div>
+            <div class="form-group">
+                <label for="mentorshipGroup">Select Mentorship Group:</label>
+                <select id="mentorshipGroup" name="mentorshipGroup" required>
+                    <option value="">--Select Group--</option>
+                    <option value="Group A">Group A</option>
+                    <option value="Group B">Group B</option>
+                    <option value="Group C">Group C</option>
+                    <!-- Add more groups as needed -->
+                </select>
+            </div>
+            <button type="submit">Add Student to Group</button>
+        </form>
+        <div id="responseMessage" style="display:none;"></div> <!-- To display the success/error message -->
+    </div>
+
+    <script>
+        document.getElementById('addStudentForm').addEventListener('submit', async function(event) {
+            event.preventDefault();
+
+            const studentUsernumber = document.getElementById('studentUsernumber').value;
+            const mentorshipGroup = document.getElementById('mentorshipGroup').value;
+            
+            try {
+                const response = await fetch('/add-student-to-group', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ studentUsernumber, mentorshipGroup })
+                });
+
+                const result = await response.json();
+
+                const responseMessage = document.getElementById('responseMessage');
+                if (response.ok) {
+                    responseMessage.style.color = 'green';
+                    responseMessage.textContent = result.message;
+                } else {
+                    responseMessage.style.color = 'red';
+                    responseMessage.textContent = result.message || 'Failed to add student to group';
+                }
+                responseMessage.style.display = 'block';
+            } catch (error) {
+                console.error('Error:', error);
+                const responseMessage = document.getElementById('responseMessage');
+                responseMessage.style.color = 'red';
+                responseMessage.textContent = 'An error occurred. Please try again later.';
+                responseMessage.style.display = 'block';
+            }
+        });
+    </script>
+</body>
+</html>

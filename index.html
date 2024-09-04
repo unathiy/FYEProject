@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #0A1A4C;
+            color: #FFD700;
+            text-align: center;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 400px;
+            margin: 0 auto;
+            padding-top: 50px;
+        }
+
+        .logo {
+            margin-bottom: 30px;
+        }
+
+        .logo img {
+            width: 50%;
+        }
+
+        h1 {
+            margin-bottom: 40px;
+        }
+
+        .form-group {
+            margin-bottom: 10px;
+        }
+
+        label {
+            display: block;
+            text-align: left;
+            margin-bottom: 5px;
+        }
+
+        input[type="text"], input[type="password"] {
+            width: 100%;
+            padding: 10px;
+            border: 2px solid #FFD700;
+            border-radius: 5px;
+            background-color: #0A1A4C;
+            color: #FFD700;
+        }
+
+        input[type="submit"] {
+            background-color: #FFD700;
+            border: none;
+            color: #0A1A4C;
+            padding: 10px 20px;
+            font-size: 16px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 20px;
+        }
+
+        .link {
+            color: #FFD700;
+            margin-top: 10px;
+            display: block;
+        }
+
+        .link a {
+            color: #FFD700;
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="logo">
+            <img src="umplogo.png" alt="UMP Logo">
+        </div>
+        <div class="logo">
+            <img src="fyelogo.png" alt="FYE-Support Logo">
+        </div>
+        <form id="loginForm">
+            <label for="usernumber">User Number</label>
+            <input type="text" id="usernumber" name="usernumber" required>
+
+            <label for="password">Password</label>
+            <input type="password" id="password" name="password" required>
+
+            <input type="submit" value="Login">
+        </form>
+        <div class="link">
+            <a href="register.html">Click here for Student Registration</a>
+        </div>
+        <div class="link">
+            <a href="forgotpassword.html">Forgot your password?</a>
+        </div>
+    </div>
+    <script>
+        document.getElementById('loginForm').addEventListener('submit', async function(event) {
+    event.preventDefault();
+    const usernumber = document.getElementById('usernumber').value;
+    const password = document.getElementById('password').value;
+
+    const response = await fetch('/login', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ usernumber, password })
+    });
+    const data = await response.json();
+
+    if (response.ok) {
+        localStorage.setItem('username', data.username);
+        localStorage.setItem('role', data.role); // Store role in local storage
+        switch (data.role) {
+            case 'student':
+                window.location.href = 'student-dashboard.html';
+                break;
+            case 'tutor':
+                window.location.href = 'tutor-dashboard.html';
+                break;
+            case 'mentor':
+                window.location.href = 'mentor-dashboard.html';
+                break;
+            case 'admin':
+                window.location.href = 'admin-dashboard.html';
+                break;
+            default:
+                alert('Role not recognized');
+                break;
+        }
+    } else {
+        alert(data.message);
+    }
+});
+
+    </script>
+    
+</body>
+</html>

@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Profile</title>
+    <style>
+         body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+        .navbar {
+            background-color: #0A1A4C;
+            color: #fff;
+            padding: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .navbar img {
+            height: 70px;
+        }
+        .profile-container {
+            margin: 50px auto;
+            width: 80%;
+            max-width: 600px;
+            background-color: #fff;
+            border: 4px solid #0A1A4C;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+        }
+        .profile-container h1 {
+            text-align: center;
+            color: #0A1A4C;
+        }
+        .profile-info {
+            margin-bottom: 20px;
+        }
+        .profile-info label {
+            font-weight: bold;
+            color: #0A1A4C;
+        }
+        .profile-info p {
+            margin: 5px 0;
+            color: #b4b2b2;
+        }
+        
+        .back-button {
+            background-color: #0A1A4C;
+            color: #FFD700;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s;
+        }
+        .back-button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <div class="navbar">
+        <img src="fyelogo.png" alt="FYE-Support Logo">
+    </div>
+
+    <div class="profile-container">
+        <h1>User Profile</h1>
+        <div class="profile-info">
+            <label for="username">Username:</label>
+            <p id="username">Loading...</p>
+        </div>
+        <div class="profile-info">
+            <label for="usernumber">User Number:</label>
+            <p id="usernumber">Loading...</p>
+        </div>
+        <div class="profile-info">
+            <label for="email">Email:</label>
+            <p id="email">Loading...</p>
+        </div>
+        <div class="profile-info">
+            <label for="password">Password:</label>
+            <p id="password">******</p> <!-- Hide password -->
+        </div>
+        <div class="profile-info">
+            <label for="role">Role:</label>
+            <p id="role">Loading...</p>
+        </div>
+        <button class="back-button" onclick="window.location.href='student-dashboard.html'">Back to Dashboard</button>
+    </div>
+
+    <script>
+        document.getElementById('logoutSwitch').addEventListener('change', function() {
+            if (this.checked) {
+                localStorage.removeItem('username');
+                window.location.href = 'index.html';
+            }
+        });
+        document.addEventListener('DOMContentLoaded', async function() {
+            try {
+                const response = await fetch('/api/profile');
+                if (!response.ok) {
+                    throw new Error('Failed to fetch profile data');
+                }
+                const data = await response.json();
+
+                document.getElementById('username').textContent = data.username;
+                document.getElementById('usernumber').textContent = data.usernumber;
+                document.getElementById('email').textContent = data.email;
+                document.getElementById('role').textContent = data.role;
+            } catch (error) {
+                console.error('Error fetching profile data:', error);
+                alert('Error loading profile data');
+            }
+        });
+    </script>
+</body>
+</html>
